@@ -90,20 +90,41 @@ export class EnemyAI {
         const line = new THREE.LineSegments(edges, lineMaterial);
         body.add(line);
         
-        // Add glow effect
-        const glowGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+        // Add glow effect (brighter)
+        const glowGeometry = new THREE.SphereGeometry(0.4, 16, 16);
         const glowMaterial = new THREE.MeshBasicMaterial({
             color: 0xff0000,
             transparent: true,
-            opacity: 0.2
+            opacity: 0.4
         });
         const glow = new THREE.Mesh(glowGeometry, glowMaterial);
         glow.position.y = 1.6;
         this.group.add(glow);
         
+        // Add name tag above head
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 32;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, 128, 32);
+        ctx.fillStyle = '#ff0000';
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('ENEMY', 64, 22);
+        
+        const texture = new THREE.CanvasTexture(canvas);
+        const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.position.y = 2.5;
+        sprite.scale.set(1, 0.25, 1);
+        this.group.add(sprite);
+        
         this.group.position.copy(position);
         this.group.userData.enemy = this;
         this.scene.add(this.group);
+        
+        console.log('Enemy model created at:', position);
         
         // Health bar
         this.createHealthBar();
@@ -129,12 +150,13 @@ export class EnemyAI {
     }
 
     setupPhysics(position) {
-        const shape = new CANNON.Cylinder(0.3, 0.3, 1.8, 8);
+        const shape = new CANNON.Box(new CANNON.Vec3(0.3, 0.9, 0.2));
         this.body = new CANNON.Body({
             mass: 70,
             shape: shape,
             position: new CANNON.Vec3(position.x, position.y + 0.9, position.z),
-            linearDamping: 0.9
+            linearDamping: 0.9,
+            fixedRotation: true
         });
         this.world.addBody(this.body);
     }
@@ -154,6 +176,8 @@ export class EnemyAI {
     }
 
     update(deltaTime, playerPosition) {
+        if (!this.body || !this.group) return;
+        
         const distanceToPlayer = this.group.position.distanceTo(playerPosition);
         
         // State machine
@@ -184,8 +208,11 @@ export class EnemyAI {
         }
         
         // Update position from physics
-        this.group.position.copy(this.body.position);
-        this.group.position.y -= 0.9;
+        this.group.position.set(
+            this.body.position.x,
+            this.body.position.y - 0.9,
+            this.body.position.z
+        );
         
         // Make health bar face camera
         if (this.healthBarBg) {

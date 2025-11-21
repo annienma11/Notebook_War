@@ -113,17 +113,22 @@ class Game {
 
     spawnEnemies() {
         const spawnPositions = [
-            new THREE.Vector3(-5, 0, -15),
-            new THREE.Vector3(5, 0, -15),
-            new THREE.Vector3(0, 0, -20),
-            new THREE.Vector3(-8, 0, -12),
-            new THREE.Vector3(8, 0, -12)
+            new THREE.Vector3(-5, 1, -15),
+            new THREE.Vector3(5, 1, -15),
+            new THREE.Vector3(0, 1, -20),
+            new THREE.Vector3(-8, 1, -12),
+            new THREE.Vector3(8, 1, -12),
+            new THREE.Vector3(-3, 1, -18),
+            new THREE.Vector3(3, 1, -18)
         ];
 
         spawnPositions.forEach(pos => {
             const enemy = new EnemyAI(this.scene, this.world, pos, this.materials, this.particles);
             this.enemies.push(enemy);
+            console.log('Enemy spawned at:', pos);
         });
+        
+        console.log(`Total enemies spawned: ${this.enemies.length}`);
     }
 
     setupLevel() {
@@ -243,6 +248,11 @@ class Game {
     hideLoading() {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('crosshair').style.display = 'block';
+        
+        // Debug info
+        console.log('Game initialized');
+        console.log('Scene children:', this.scene.children.length);
+        console.log('Enemies:', this.enemies.length);
     }
 
     start() {

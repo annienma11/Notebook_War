@@ -91,9 +91,12 @@ export class PlayerController {
     handleRotation(deltaTime) {
         const lookInput = this.input.getLookInput();
         
+        // Rotate body left/right
+        this.body.quaternion.setFromEuler(new CANNON.Euler(0, this.camera.rotation.y - lookInput.x * this.stats.mouseSensitivity, 0));
         this.camera.rotation.y -= lookInput.x * this.stats.mouseSensitivity;
-        this.camera.rotation.x -= lookInput.y * this.stats.mouseSensitivity;
         
+        // Rotate camera up/down
+        this.camera.rotation.x -= lookInput.y * this.stats.mouseSensitivity;
         this.camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.camera.rotation.x));
     }
 
