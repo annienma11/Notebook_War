@@ -1,0 +1,12 @@
+{
+  "maxHealth": 100,
+  "maxArmor": 100,
+  "maxStamina": 100,
+  "staminaRegenRate": 10,
+  "sprintStaminaCost": 20,
+  "walkSpeed": 5,
+  "sprintSpeed": 8,
+  "crouchSpeed": 2.5,
+  "jumpForce": 5,
+  "mouseSensitivity": 0.002
+}

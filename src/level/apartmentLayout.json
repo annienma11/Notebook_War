@@ -1,0 +1,50 @@
+{
+  "apartmentComplex": {
+    "name": "Apartment Complex - Stage 1",
+    "floors": 3,
+    "layout": {
+      "floor1": {
+        "rooms": ["lobby", "mailroom", "storage"],
+        "enemies": 3,
+        "spawnPoints": [
+          {"x": 0, "y": 0, "z": 5},
+          {"x": -3, "y": 0, "z": 8},
+          {"x": 4, "y": 0, "z": 2}
+        ],
+        "pickups": [
+          {"type": "medkit", "x": 2, "y": 0, "z": 6}
+        ]
+      },
+      "floor2": {
+        "rooms": ["apartment_a", "apartment_b", "hallway"],
+        "enemies": 3,
+        "spawnPoints": [
+          {"x": -2, "y": 3, "z": 7},
+          {"x": 3, "y": 3, "z": 4},
+          {"x": 0, "y": 3, "z": 9}
+        ],
+        "pickups": [
+          {"type": "ammo", "x": -3, "y": 3, "z": 4},
+          {"type": "medkit", "x": 2, "y": 3, "z": 6}
+        ]
+      },
+      "floor3": {
+        "rooms": ["penthouse", "balcony"],
+        "enemies": 2,
+        "spawnPoints": [
+          {"x": 1, "y": 6, "z": 5},
+          {"x": -2, "y": 6, "z": 8}
+        ],
+        "pickups": [
+          {"type": "armor", "x": 0, "y": 6, "z": 3}
+        ]
+      }
+    },
+    "checkpoints": [
+      {"floor": 1, "x": 0, "y": 0, "z": 0},
+      {"floor": 2, "x": 0, "y": 3, "z": 0},
+      {"floor": 3, "x": 0, "y": 6, "z": 0}
+    ],
+    "objective": "Clear all enemies floor by floor"
+  }
+}

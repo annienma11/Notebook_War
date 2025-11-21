@@ -1,6 +1,7 @@
 using UnityEngine;
 using NotebookWar.Data;
 using NotebookWar.Input;
+using NotebookWar.UI;
 
 namespace NotebookWar.Player
 {
@@ -90,6 +91,11 @@ namespace NotebookWar.Player
             stats.currentHealth -= damage;
             stats.currentHealth = Mathf.Max(stats.currentHealth, 0f);
 
+            // Show damage indicator
+            DamageIndicator damageIndicator = FindObjectOfType<DamageIndicator>();
+            if (damageIndicator != null)
+                damageIndicator.ShowDamage();
+
             if (stats.currentHealth <= 0)
                 Die();
         }
@@ -99,5 +105,23 @@ namespace NotebookWar.Player
             Debug.Log("Player died!");
             // TODO: Implement death logic
         }
+
+        public void Heal(float amount)
+        {
+            stats.currentHealth += amount;
+            stats.currentHealth = Mathf.Min(stats.currentHealth, stats.maxHealth);
+        }
+
+        public void RestoreArmor(float amount)
+        {
+            stats.currentArmor += amount;
+            stats.currentArmor = Mathf.Min(stats.currentArmor, stats.maxArmor);
+        }
+
+        // Getters for pickup system
+        public float GetCurrentHealth() => stats.currentHealth;
+        public float GetMaxHealth() => stats.maxHealth;
+        public float GetCurrentArmor() => stats.currentArmor;
+        public float GetMaxArmor() => stats.maxArmor;
     }
 }

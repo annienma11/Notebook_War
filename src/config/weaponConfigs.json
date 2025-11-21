@@ -1,0 +1,64 @@
+{
+  "weapons": {
+    "pistol": {
+      "weaponName": "Pistol",
+      "damage": 25,
+      "fireRate": 0.3,
+      "range": 50,
+      "magazineSize": 12,
+      "reloadTime": 1.5,
+      "isAutomatic": false,
+      "recoil": 0.5
+    },
+    "smg": {
+      "weaponName": "SMG",
+      "damage": 15,
+      "fireRate": 0.075,
+      "range": 30,
+      "magazineSize": 30,
+      "reloadTime": 2.0,
+      "isAutomatic": true,
+      "recoil": 1.2
+    },
+    "rifle": {
+      "weaponName": "Assault Rifle",
+      "damage": 30,
+      "fireRate": 0.15,
+      "range": 80,
+      "magazineSize": 25,
+      "reloadTime": 2.5,
+      "isAutomatic": true,
+      "recoil": 0.8
+    },
+    "shotgun": {
+      "weaponName": "Shotgun",
+      "damage": 80,
+      "fireRate": 0.8,
+      "range": 20,
+      "magazineSize": 6,
+      "reloadTime": 3.0,
+      "isAutomatic": false,
+      "recoil": 2.0
+    },
+    "sniper": {
+      "weaponName": "Sniper Rifle",
+      "damage": 100,
+      "fireRate": 1.5,
+      "range": 150,
+      "magazineSize": 5,
+      "reloadTime": 3.5,
+      "isAutomatic": false,
+      "recoil": 0.1
+    },
+    "grenade": {
+      "weaponName": "Grenade",
+      "damage": 120,
+      "fireRate": 2.0,
+      "range": 25,
+      "magazineSize": 3,
+      "reloadTime": 1.0,
+      "isAutomatic": false,
+      "recoil": 0.0
+    }
+  }
+}

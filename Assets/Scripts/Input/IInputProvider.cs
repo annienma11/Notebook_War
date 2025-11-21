@@ -13,6 +13,7 @@ namespace NotebookWar.Input
         bool GetAimInput();
         bool GetReloadInput();
         bool GetInteractInput();
-        int GetWeaponSwitchInput();
+        bool GetWeaponSwitchInput(int weaponNumber);
+        float GetScrollInput();
     }
 }

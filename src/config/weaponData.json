@@ -1,0 +1,22 @@
+{
+  "pistol": {
+    "name": "Pistol",
+    "damage": 15,
+    "fireRate": 0.3,
+    "range": 100,
+    "magazineSize": 12,
+    "reloadTime": 1.5,
+    "isAutomatic": false,
+    "recoil": 1
+  },
+  "smg": {
+    "name": "SMG",
+    "damage": 10,
+    "fireRate": 0.1,
+    "range": 50,
+    "magazineSize": 30,
+    "reloadTime": 2,
+    "isAutomatic": true,
+    "recoil": 0.5
+  }
+}

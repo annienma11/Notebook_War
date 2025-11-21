@@ -26,14 +26,18 @@ namespace NotebookWar.Input
         public bool GetReloadInput() => UnityEngine.Input.GetKeyDown(KeyCode.R);
         public bool GetInteractInput() => UnityEngine.Input.GetKeyDown(KeyCode.E);
 
-        public int GetWeaponSwitchInput()
+        public bool GetWeaponSwitchInput(int weaponNumber)
         {
-            for (int i = 1; i <= 6; i++)
+            if (weaponNumber >= 1 && weaponNumber <= 6)
             {
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha0 + i))
-                    return i;
+                return UnityEngine.Input.GetKeyDown(KeyCode.Alpha0 + weaponNumber);
             }
-            return 0;
+            return false;
+        }
+
+        public float GetScrollInput()
+        {
+            return UnityEngine.Input.GetAxis("Mouse ScrollWheel");
         }
     }
 }
