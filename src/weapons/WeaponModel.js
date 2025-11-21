@@ -24,7 +24,7 @@ export class WeaponModel {
         }
         
         // Position weapon in front of camera
-        this.weaponGroup.position.set(0.3, -0.3, -0.5);
+        this.weaponGroup.position.set(0.15, -0.15, -0.4);
         this.camera.add(this.weaponGroup);
     }
 
@@ -154,9 +154,10 @@ export class WeaponModel {
     }
 
     createMuzzleFlash() {
-        const flashGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+        // Small flash at barrel
+        const flashGeometry = new THREE.SphereGeometry(0.02, 8, 8);
         const flashMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffaa00,
+            color: 0xffff00,
             transparent: true,
             opacity: 1
         });
@@ -164,21 +165,14 @@ export class WeaponModel {
         flash.position.set(0, 0.04, -0.35);
         this.weaponGroup.add(flash);
 
-        // Add point light for flash
-        const flashLight = new THREE.PointLight(0xffaa00, 2, 5);
-        flashLight.position.copy(flash.position);
-        this.weaponGroup.add(flashLight);
-
-        // Animate and remove
+        // Animate and remove quickly
         let opacity = 1;
         const animate = () => {
-            opacity -= 0.1;
+            opacity -= 0.2;
             flashMaterial.opacity = opacity;
-            flashLight.intensity = opacity * 2;
 
             if (opacity <= 0) {
                 this.weaponGroup.remove(flash);
-                this.weaponGroup.remove(flashLight);
                 flashGeometry.dispose();
                 flashMaterial.dispose();
             } else {

@@ -24,56 +24,82 @@ export class EnemyAI {
     createModel(position) {
         this.group = new THREE.Group();
         
-        // Body
+        // Body (brighter red)
         const bodyGeometry = new THREE.BoxGeometry(0.6, 1.4, 0.4);
-        const body = new THREE.Mesh(bodyGeometry, this.materials.get('redStickman'));
+        const bodyMaterial = new THREE.MeshStandardMaterial({
+            color: 0xff3333,
+            roughness: 0.7,
+            metalness: 0.3,
+            emissive: 0xff0000,
+            emissiveIntensity: 0.3
+        });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
         body.position.y = 0.7;
         body.castShadow = true;
         this.group.add(body);
         
-        // Head
+        // Head (brighter)
         const headGeometry = new THREE.SphereGeometry(0.25, 16, 16);
-        const head = new THREE.Mesh(headGeometry, this.materials.get('redStickman'));
+        const head = new THREE.Mesh(headGeometry, bodyMaterial);
         head.position.y = 1.6;
         head.castShadow = true;
         this.group.add(head);
         
-        // Arms
+        // Arms (brighter)
         const armGeometry = new THREE.BoxGeometry(0.15, 0.8, 0.15);
-        const leftArm = new THREE.Mesh(armGeometry, this.materials.get('redStickman'));
+        const leftArm = new THREE.Mesh(armGeometry, bodyMaterial);
         leftArm.position.set(-0.4, 0.7, 0);
         leftArm.castShadow = true;
         this.group.add(leftArm);
         
-        const rightArm = new THREE.Mesh(armGeometry, this.materials.get('redStickman'));
+        const rightArm = new THREE.Mesh(armGeometry, bodyMaterial);
         rightArm.position.set(0.4, 0.7, 0);
         rightArm.castShadow = true;
         this.group.add(rightArm);
         
-        // Legs
+        // Legs (brighter)
         const legGeometry = new THREE.BoxGeometry(0.2, 0.7, 0.2);
-        const leftLeg = new THREE.Mesh(legGeometry, this.materials.get('redStickman'));
+        const leftLeg = new THREE.Mesh(legGeometry, bodyMaterial);
         leftLeg.position.set(-0.15, 0, 0);
         leftLeg.castShadow = true;
         this.group.add(leftLeg);
         
-        const rightLeg = new THREE.Mesh(legGeometry, this.materials.get('redStickman'));
+        const rightLeg = new THREE.Mesh(legGeometry, bodyMaterial);
         rightLeg.position.set(0.15, 0, 0);
         rightLeg.castShadow = true;
         this.group.add(rightLeg);
         
-        // Weapon (simple rifle)
+        // Weapon (simple rifle - more visible)
         const weaponGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.6);
-        const weaponMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+        const weaponMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x333333,
+            metalness: 0.8,
+            roughness: 0.3
+        });
         const weapon = new THREE.Mesh(weaponGeometry, weaponMaterial);
         weapon.position.set(0.3, 0.8, -0.3);
         weapon.rotation.y = -Math.PI / 4;
         this.group.add(weapon);
         
-        // Outline
+        // Outline (thicker and more visible)
         const edges = new THREE.EdgesGeometry(bodyGeometry);
-        const line = new THREE.LineSegments(edges, this.materials.get('sketchLines'));
+        const lineMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x000000,
+            linewidth: 3
+        });
+        const line = new THREE.LineSegments(edges, lineMaterial);
         body.add(line);
+        
+        // Add glow effect
+        const glowGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            transparent: true,
+            opacity: 0.2
+        });
+        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+        glow.position.y = 1.6;
+        this.group.add(glow);
         
         this.group.position.copy(position);
         this.group.userData.enemy = this;

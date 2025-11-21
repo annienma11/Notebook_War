@@ -1,13 +1,15 @@
 import * as THREE from 'three';
 import { WeaponModel } from './WeaponModel.js';
+import { BulletSystem } from '../core/BulletSystem.js';
 
 export class WeaponBase {
-    constructor(scene, camera, inputManager, weaponData, particleSystem) {
+    constructor(scene, camera, inputManager, weaponData, particleSystem, bulletSystem) {
         this.scene = scene;
         this.camera = camera;
         this.input = inputManager;
         this.data = weaponData;
         this.particles = particleSystem;
+        this.bulletSystem = bulletSystem;
 
         this.currentAmmo = weaponData.magazineSize;
         this.nextFireTime = 0;
@@ -47,23 +49,30 @@ export class WeaponBase {
         // Play weapon animation
         this.weaponModel.playFireAnimation();
 
-        // Create muzzle flash particle
+        // Get bullet start position and direction
         const muzzlePos = this.camera.position.clone();
         const forward = new THREE.Vector3(0, 0, -1);
         forward.applyQuaternion(this.camera.quaternion);
         muzzlePos.add(forward.multiplyScalar(0.5));
-        this.particles.createMuzzleFlash(muzzlePos, forward);
-
+        
+        // Create visible bullet
+        const bullet = this.bulletSystem.createBullet(muzzlePos, forward, 80);
+        
+        // Check for hits along bullet path
         this.raycaster.setFromCamera(new THREE.Vector2(0, 0), this.camera);
         const intersects = this.raycaster.intersectObjects(this.scene.children, true);
 
         if (intersects.length > 0) {
             const hit = intersects[0];
             
-            // Create bullet trail
-            this.particles.createBulletTrail(muzzlePos, hit.point);
+            // Schedule hit after bullet travels
+            const distance = hit.point.distanceTo(muzzlePos);
+            const travelTime = (distance / 80) * 1000;
             
-            this.onHit(hit);
+            setTimeout(() => {
+                this.bulletSystem.removeBullet(bullet);
+                this.onHit(hit);
+            }, travelTime);
         }
 
         this.updateHUD();
@@ -71,8 +80,22 @@ export class WeaponBase {
     }
 
     onHit(hit) {
-        // Create impact particles
-        this.particles.createImpactEffect(hit.point, hit.normal);
+        // Create small impact effect
+        const impactGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+        const impactMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xff0000,
+            transparent: true,
+            opacity: 0.8
+        });
+        const impact = new THREE.Mesh(impactGeometry, impactMaterial);
+        impact.position.copy(hit.point);
+        this.scene.add(impact);
+        
+        setTimeout(() => {
+            this.scene.remove(impact);
+            impactGeometry.dispose();
+            impactMaterial.dispose();
+        }, 200);
         
         // Check if hit an enemy
         let hitEnemy = false;
@@ -85,25 +108,6 @@ export class WeaponBase {
         if (hitEnemy && window.game && window.game.hud) {
             window.game.hud.showHitmarker();
         }
-        
-        // Create impact decal
-        const impactGeometry = new THREE.CircleGeometry(0.08, 8);
-        const impactMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x000000,
-            transparent: true,
-            opacity: 0.6
-        });
-        const impact = new THREE.Mesh(impactGeometry, impactMaterial);
-        impact.position.copy(hit.point);
-        impact.position.add(hit.normal.multiplyScalar(0.01));
-        impact.lookAt(hit.point.clone().add(hit.normal));
-        this.scene.add(impact);
-        
-        setTimeout(() => {
-            this.scene.remove(impact);
-            impactGeometry.dispose();
-            impactMaterial.dispose();
-        }, 1000);
     }
 
     startReload() {

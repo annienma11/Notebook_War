@@ -8,6 +8,7 @@ import { ParticleSystem } from './core/ParticleSystem.js';
 import { SkyboxManager } from './core/SkyboxManager.js';
 import { EnemyAI } from './enemies/EnemyAI.js';
 import { HUD } from './ui/components/HUD.js';
+import { BulletSystem } from './core/BulletSystem.js';
 import playerStatsData from './config/playerStats.json';
 import weaponDataConfig from './config/weaponData.json';
 
@@ -62,10 +63,11 @@ class Game {
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog(0xe8f4f8, 20, 150);
         
-        // Initialize material library, particle system, and skybox
+        // Initialize material library, particle system, skybox, and bullet system
         this.materials = new MaterialLibrary();
         this.particles = new ParticleSystem(this.scene);
         this.skybox = new SkyboxManager(this.scene);
+        this.bulletSystem = new BulletSystem(this.scene);
     }
 
     setupPhysics() {
@@ -96,7 +98,8 @@ class Game {
             this.player.getCamera(),
             this.input,
             weaponDataConfig.pistol,
-            this.particles
+            this.particles,
+            this.bulletSystem
         );
     }
 
@@ -143,10 +146,10 @@ class Game {
         this.createWall(-10, 2, 0, 0.5, 4, 20, 'wall');
         this.createWall(10, 2, 0, 0.5, 4, 20, 'wall');
         
-        // Decorative colored boxes
-        this.createBox(-5, 0.5, -5, 1, 1, 1, 'accent1');
-        this.createBox(5, 0.5, -5, 1, 1, 1, 'accent2');
-        this.createBox(0, 0.5, -3, 1, 1, 1, 'accent3');
+        // Decorative colored boxes (smaller)
+        this.createBox(-5, 0.25, -5, 0.5, 0.5, 0.5, 'accent1');
+        this.createBox(5, 0.25, -5, 0.5, 0.5, 0.5, 'accent2');
+        this.createBox(0, 0.25, -3, 0.5, 0.5, 0.5, 'accent3');
         
         // Cover objects
         this.createCover(-3, 1, -6, 2, 2, 0.3);
@@ -257,6 +260,7 @@ class Game {
         this.player.update(deltaTime);
         this.weapon.update(deltaTime, currentTime);
         this.skybox.update(deltaTime);
+        this.bulletSystem.update(deltaTime);
         
         // Update enemies
         this.enemies = this.enemies.filter(enemy => {
